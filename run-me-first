@@ -1,0 +1,22 @@
+#!/bin/bash
+
+read -sp 'enter dotssh password: ' password
+echo ''
+
+vagrant up --no-provision
+
+PORT=$(vagrant ssh-config | grep Port | grep -o '[0-9]\+')
+ssh -q \
+    -o UserKnownHostsFile=/dev/null \
+    -o StrictHostKeyChecking=no \
+    vagrant@localhost \
+    -p $PORT <<ENDSSH
+
+sudo apt-get install git --assume-yes
+mv ~/.ssh ~/.ssh-old
+git clone https://lazywithclass:$password@github.com/lazywithclass/dotssh.git ~/.ssh
+cp ~/.ssh-old/authorized_keys ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/id_rsa
+cat .ssh-old/authorized_keys >>.ssh/authorized_keys
+
+ENDSSH
