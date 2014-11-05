@@ -13,9 +13,14 @@ file { '/home/vagrant/bin':
   group => 'vagrant'
 }
 
+package { 'python-software-properties':
+  ensure => 'installed',
+  require => Exec['system-update']
+}  
+
 class system {
   package { 
-    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh']: 
+    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp']: 
       ensure => 'installed',
       require => Exec['system-update']
   }
@@ -44,20 +49,17 @@ class nodejs {
   }
 }
 
+# check to avoid adding ppa and updating every time
 class emacs {
-  package { 'python-software-properties':
-    ensure => 'installed',
-    require => Exec['system-update']
-  }  
-  exec { 'use-the-ppa':
+  exec { 'use-the-emacs-ppa':
     command => 'add-apt-repository ppa:ubuntu-elisp/ppa -y',
     require => Package['python-software-properties'],
-    onlyif => 'whereis emacs && return 1'
+    unless => 'test -f /usr/bin/emacs-snapshot'
   }
   exec { 'update-for-emacs':
     command => 'apt-get update',
-    require => Exec['use-the-ppa'],
-    onlyif => 'whereis emacs && return 1'
+    require => Exec['use-the-emacs-ppa'],
+    unless => 'test -f /usr/bin/emacs-snapshot'
   }
   package { 'emacs-snapshot':
     ensure => 'installed',
@@ -79,8 +81,50 @@ class workspace {
   }
 }
 
+# check to avoid adding ppa and updating every time
+class chrome {
+  exec { 'get-the-key':
+    command => 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -',
+    require => Package['python-software-properties'],
+    unless => 'test -f /usr/bin/google-chrome'
+  }
+  exec { 'add-key-to-repository':
+    command => 'sh -c \'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list\'',
+    require => Exec['get-the-key'],
+    unless => 'test -f /usr/bin/google-chrome'
+  }
+  exec { 'update-for-chrome':
+    command => 'apt-get update',
+    require => Exec['add-key-to-repository'],
+    unless => 'test -f /usr/bin/google-chrome'
+  }
+  package { 'google-chrome-stable':
+    ensure => 'installed',
+    require => Exec['update-for-chrome']
+  }
+}
+
+# check to avoid adding ppa and updating every time
+class skype {
+  exec { 'use-the-skype-ppa':
+    command => 'add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner"',
+    require => Package['python-software-properties'],
+    unless => 'test -f /usr/bin/skype'
+  }
+  exec { 'update-for-skype':
+    command => 'apt-get update',
+    require => Exec['use-the-skype-ppa'],
+    unless => 'test -f /usr/bin/skype'
+  }
+  package { 'skype':
+    ensure => 'present',
+    require => Exec['update-for-skype']
+  }
+}
 
 include system
 include nodejs
 include emacs
 include workspace
+include chrome
+include skype
