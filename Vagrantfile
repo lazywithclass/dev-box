@@ -6,9 +6,9 @@ Vagrant.configure('2') do |config|
   config.vm.box_url = 'http://files.vagrantup.com/precise64.box'
   config.vm.hostname = 'dagobah'
   
-  # config.vm.provider 'virtualbox' do |v|
-  #   v.gui = true
-  # end
+  config.vm.provider 'virtualbox' do |v|
+    v.gui = true
+  end
 
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = 'manifests'
