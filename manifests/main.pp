@@ -3,10 +3,6 @@ Exec {
   timeout => 999999
 }
 
-exec { 'system-update':
-  command => 'apt-get update'
-}
-
 file { '/home/vagrant/bin':
   ensure => 'directory',
   owner => 'vagrant',
@@ -19,6 +15,17 @@ package { 'python-software-properties':
 }  
 
 class system {
+  exec { 'system-update':
+    command => 'apt-get update'
+  }
+  exec { 'system-upgrade':
+    command => 'apt-get upgrade -y',
+    require => Exec['system-update']
+  }
+  exec { 'system-dist-upgrade':
+    command => 'apt-get upgrade -y',
+    require => Exec['system-upgrade']
+  }
   package { 
     ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp']: 
       ensure => 'installed',
