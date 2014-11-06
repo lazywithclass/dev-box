@@ -56,7 +56,6 @@ class nodejs {
   }
 }
 
-# check to avoid adding ppa and updating every time
 class emacs {
   exec { 'use-the-emacs-ppa':
     command => 'add-apt-repository ppa:ubuntu-elisp/ppa -y',
@@ -88,7 +87,6 @@ class workspace {
   }
 }
 
-# check to avoid adding ppa and updating every time
 class chrome {
   exec { 'get-the-key':
     command => 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -',
@@ -111,7 +109,6 @@ class chrome {
   }
 }
 
-# check to avoid adding ppa and updating every time
 class skype {
   exec { 'use-the-skype-ppa':
     command => 'add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner"',
