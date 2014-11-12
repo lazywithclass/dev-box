@@ -132,9 +132,21 @@ class skype {
   }
 }
 
+class monaco {
+  file { '/usr/share/fonts/truetype/custom':
+    ensure => 'directory'
+  }
+  exec { 'install-font':
+    command => 'wget http://jorrel.googlepages.com/Monaco_Linux.ttf -P /usr/share/fonts/truetype/custom && fc-cache -f -v',
+    creates => '/usr/share/fonts/truetype/custom/Monaco_Linux.ttf',
+    require => File['/usr/share/fonts/truetype/custom']
+  }
+}
+
 include system
 include nodejs
 include emacs
 include workspace
 include chrome
 include skype
+include monaco
