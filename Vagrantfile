@@ -8,7 +8,10 @@ Vagrant.configure('2') do |config|
   
   config.vm.provider 'virtualbox' do |v|
     v.gui = true
+    v.customize ['modifyvm', :id, '--memory', 3072]
   end
+
+  
 
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = 'manifests'
