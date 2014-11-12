@@ -27,7 +27,7 @@ class system {
     require => Exec['system-upgrade']
   }
   package { 
-    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp']: 
+    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp', 'virtualbox-guest-dkms', 'virtualbox-guest-utils', 'virtualbox-guest-x11', 'vim', 'tmux']: 
       ensure => 'installed',
       require => Exec['system-update']
   }
@@ -70,6 +70,12 @@ class emacs {
   package { 'emacs-snapshot':
     ensure => 'installed',
     require => Exec['update-for-emacs']
+  }
+  file { '/home/vagrant/.emacs.d':
+    ensure => 'link',
+    force => 'true',
+    target => '/home/vagrant/workspace/dotfiles/emacs.d',
+    require => [ Package['emacs-snapshot'], Exec['clone-dotfiles'] ]
   }
 }
 
