@@ -5,7 +5,7 @@ echo ''
 
 vagrant up --no-provision
 
-PORT=$(vagrant ssh-config | grep Port | grep -o '[0-9]\+')
+PORT=$(vagrant ssh-config | grep Port | sed 's/^ *Port \(.*\)/\1/g')
 ssh -q \
     -o UserKnownHostsFile=/dev/null \
     -o StrictHostKeyChecking=no \
