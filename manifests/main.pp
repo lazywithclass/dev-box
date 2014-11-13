@@ -49,7 +49,15 @@ class system {
   }
   exec { 'get-oh-my-zsh':
     command => 'git clone https://github.com/robbyrussell/oh-my-zsh.git /home/vagrant/.oh-my-zsh',
+    user => 'vagrant',
+    group => 'vagrant',
     creates => '/home/vagrant/.oh-my-zsh'
+  }
+  exec { 'get-scm-breeze':
+    command => 'git clone https://github.com/ndbroadbent/scm_breeze.git /home/vagrant/.scm_breeze',
+    user => 'vagrant',
+    group => 'vagrant',
+    creates => '/home/vagrant/.scm_breeze'
   }
   file { '/home/vagrant/.zshrc':
     ensure => 'link',
