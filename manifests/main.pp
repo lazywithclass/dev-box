@@ -119,6 +119,12 @@ class workspace {
     creates => '/home/vagrant/workspace/dotfiles',
     require => File['/home/vagrant/workspace']
   }
+  exec { 'clone-emacs-nav':
+    command => 'git clone git@github.com:lazywithclass/emacs-nav.git /home/vagrant/workspace/emacs-nav',
+    user => 'vagrant',
+    creates => '/home/vagrant/workspace/emacs-nav',
+    require => File['/home/vagrant/workspace']
+  }
 }
 
 class chrome {
