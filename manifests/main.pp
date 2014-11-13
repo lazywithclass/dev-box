@@ -27,9 +27,37 @@ class system {
     require => Exec['system-upgrade']
   }
   package { 
-    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp', 'virtualbox-guest-dkms', 'virtualbox-guest-utils', 'virtualbox-guest-x11', 'vim', 'tmux']: 
+    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp', 'virtualbox-guest-dkms', 'virtualbox-guest-utils', 'virtualbox-guest-x11', 'vim', 'tmux', 'fortune-mod']: 
       ensure => 'installed',
       require => Exec['system-update']
+  }
+  file { '/home/vagrant/.gitconfig':
+    ensure => 'link',
+    owner => 'vagrant',
+    group => 'vagrant',
+    force => 'true',
+    target => '/home/vagrant/workspace/dotfiles/gitconfig',
+    require => Exec['clone-dotfiles']
+  }
+  file { '/home/vagrant/.bashrc':
+    ensure => 'link',
+    owner => 'vagrant',
+    group => 'vagrant',
+    force => 'true',
+    target => '/home/vagrant/workspace/dotfiles/bashrc.sh',
+    require => Exec['clone-dotfiles']
+  }
+  exec { 'get-oh-my-zsh':
+    command => 'git clone https://github.com/robbyrussell/oh-my-zsh.git /home/vagrant/.oh-my-zsh',
+    creates => '/home/vagrant/.oh-my-zsh'
+  }
+  file { '/home/vagrant/.zshrc':
+    ensure => 'link',
+    owner => 'vagrant',
+    group => 'vagrant',
+    force => 'true',
+    target => '/home/vagrant/workspace/dotfiles/zshrc.sh',
+    require => [ Exec['get-oh-my-zsh'], Exec['clone-dotfiles'] ]
   }
 }
 
