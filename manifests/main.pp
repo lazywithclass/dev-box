@@ -27,7 +27,7 @@ class system {
     require => Exec['system-upgrade']
   }
   package { 
-    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp', 'virtualbox-guest-dkms', 'virtualbox-guest-utils', 'virtualbox-guest-x11', 'vim', 'tmux', 'fortune-mod']: 
+    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp', 'virtualbox-guest-dkms', 'virtualbox-guest-utils', 'virtualbox-guest-x11', 'vim', 'tmux', 'fortune-mod', 'texinfo']: 
       ensure => 'installed',
       require => Exec['system-update']
   }
