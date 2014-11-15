@@ -185,6 +185,17 @@ class monaco {
   }
 }
 
+class frida {
+  exec { 'install-easy_install':
+    command => 'wget https://bootstrap.pypa.io/ez_setup.py -O - | python',
+    unless => 'test -f /usr/local/bin/easy_install'
+  }
+  exec { 'install-frida':
+    command => 'easy_install frida',
+    creates => '/usr/local/lib/python2.7/dist-packages/frida-1.6.7-py2.7-linux-x86_64.egg'
+  }
+}
+
 include system
 include nodejs
 include emacs
@@ -192,3 +203,4 @@ include workspace
 include chrome
 include skype
 include monaco
+include frida
