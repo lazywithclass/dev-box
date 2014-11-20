@@ -96,12 +96,12 @@ class emacs {
   exec { 'use-the-emacs-ppa':
     command => 'add-apt-repository ppa:ubuntu-elisp/ppa -y',
     require => Package['python-software-properties'],
-    unless => 'test -f /usr/bin/emacs-snapshot'
+    unless => 'test -e /usr/bin/emacs-snapshot'
   }
   exec { 'update-for-emacs':
     command => 'apt-get update',
     require => Exec['use-the-emacs-ppa'],
-    unless => 'test -f /usr/bin/emacs-snapshot'
+    unless => 'test -e /usr/bin/emacs-snapshot'
   }
   package { 'emacs-snapshot':
     ensure => 'installed',
@@ -133,23 +133,35 @@ class workspace {
     creates => '/home/vagrant/workspace/emacs-nav',
     require => File['/home/vagrant/workspace']
   }
+  exec { 'clone-jgarth':
+    command => 'git clone git@github.com:lazywithclass/jgarth.git /home/vagrant/workspace/jgarth',
+    user => 'vagrant',
+    creates => '/home/vagrant/workspace/jgarth',
+    require => File['/home/vagrant/workspace']
+  }
+  exec { 'clone-dynamodb-transactions':
+    command => 'git clone https://github.com/awslabs/dynamodb-transactions.git /home/vagrant/workspace/dynamodb-transactions',
+    user => 'vagrant',
+    creates => '/home/vagrant/workspace/dynamodb-transactions',
+    require => File['/home/vagrant/workspace']
+  }
 }
 
 class chrome {
   exec { 'get-the-key':
     command => 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -',
     require => Package['python-software-properties'],
-    unless => 'test -f /usr/bin/google-chrome'
+    unless => 'test -e /usr/bin/google-chrome'
   }
   exec { 'add-key-to-repository':
     command => 'sh -c \'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list\'',
     require => Exec['get-the-key'],
-    unless => 'test -f /usr/bin/google-chrome'
+    unless => 'test -e /usr/bin/google-chrome'
   }
   exec { 'update-for-chrome':
     command => 'apt-get update',
     require => Exec['add-key-to-repository'],
-    unless => 'test -f /usr/bin/google-chrome'
+    unless => 'test -e /usr/bin/google-chrome'
   }
   package { 'google-chrome-stable':
     ensure => 'installed',
@@ -161,12 +173,12 @@ class skype {
   exec { 'use-the-skype-ppa':
     command => 'add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner"',
     require => Package['python-software-properties'],
-    unless => 'test -f /usr/bin/skype'
+    unless => 'test -e /usr/bin/skype'
   }
   exec { 'update-for-skype':
     command => 'apt-get update',
     require => Exec['use-the-skype-ppa'],
-    unless => 'test -f /usr/bin/skype'
+    unless => 'test -e /usr/bin/skype'
   }
   package { 'skype':
     ensure => 'present',
@@ -187,12 +199,30 @@ class monaco {
 
 class frida {
   exec { 'install-easy_install':
-    command => 'wget https://bootstrap.pypa.io/ez_setup.py -O - | python',
-    unless => 'test -f /usr/local/bin/easy_install'
+    command => 'wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python',
+    unless => 'test -e /usr/local/bin/easy_install'
   }
   exec { 'install-frida':
     command => 'easy_install frida',
     creates => '/usr/local/lib/python2.7/dist-packages/frida-1.6.7-py2.7-linux-x86_64.egg'
+  }
+}
+
+# doesnt work, need a way to accept the eula
+class java {
+  exec { 'use-the-webupd8team-ppa':
+    command => 'add-apt-repository ppa:webupd8team/java -y',
+    require => Package['python-software-properties'],
+    unless => 'test -e /usr/bin/java'
+  }
+  exec { 'update-for-java':
+    command => 'apt-get update',
+    require => Exec['use-the-webupd8team-ppa'],
+    unless => 'test -e /usr/bin/java'
+  }
+  package { 'oracle-java7-installer':
+    ensure => 'installed',
+    require => Exec['update-for-java']
   }
 }
 
