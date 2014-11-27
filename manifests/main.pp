@@ -27,7 +27,7 @@ class system {
     require => Exec['system-upgrade']
   }
   package { 
-    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp', 'virtualbox-guest-dkms', 'virtualbox-guest-utils', 'virtualbox-guest-x11', 'vim', 'tmux', 'fortune-mod', 'texinfo']: 
+    ['tree', 'mplayer', 'xubuntu-desktop', 'zsh', 'terminator', 'gimp', 'virtualbox-guest-dkms', 'virtualbox-guest-utils', 'virtualbox-guest-x11', 'vim', 'tmux', 'fortune-mod', 'texinfo', 'expect', 'htop', 'calibre']: 
       ensure => 'installed',
       require => Exec['system-update']
   }
@@ -208,7 +208,6 @@ class frida {
   }
 }
 
-# doesnt work, need a way to accept the eula
 class java {
   exec { 'use-the-webupd8team-ppa':
     command => 'add-apt-repository ppa:webupd8team/java -y',
@@ -220,10 +219,6 @@ class java {
     require => Exec['use-the-webupd8team-ppa'],
     unless => 'test -e /usr/bin/java'
   }
-  package { 'oracle-java7-installer':
-    ensure => 'installed',
-    require => Exec['update-for-java']
-  }
 }
 
 include system
@@ -234,3 +229,4 @@ include chrome
 include skype
 include monaco
 include frida
+include java
