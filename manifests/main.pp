@@ -127,6 +127,11 @@ class workspace {
     creates => '/home/vagrant/workspace/dotfiles',
     require => File['/home/vagrant/workspace']
   }
+  exec { 'clone-tern':
+    command => 'git clone git@github.com:marijnh/tern.git /home/vagrant/tern',
+    user => 'vagrant',
+    creates => '/home/vagrant/tern'
+  }
   exec { 'clone-emacs-nav':
     command => 'git clone git@github.com:lazywithclass/emacs-nav.git /home/vagrant/workspace/emacs-nav',
     user => 'vagrant',
