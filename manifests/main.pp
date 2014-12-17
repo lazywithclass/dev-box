@@ -67,6 +67,14 @@ class system {
     target => '/home/vagrant/workspace/dotfiles/zshrc.sh',
     require => [ Exec['get-oh-my-zsh'], Exec['clone-dotfiles'] ]
   }
+  file { '/home/vagrant/.tmux.conf':
+    ensure => 'link',
+    owner => 'vagrant',
+    group => 'vagrant',
+    force => 'true',
+    target => '/home/vagrant/workspace/dotfiles/tmux.conf',
+    require => Exec['clone-dotfiles']
+  }
 }
 
 class nodejs {
