@@ -98,6 +98,13 @@ class nodejs {
     creates => '/usr/local/bin/node',
     require => File['/home/vagrant/bin/nave']
   }
+  file { '/usr/local/lib/node_modules/': 
+    ensure => directory,
+    group => 'vagrant',
+    owner => 'vagrant',
+    recurse => true,
+    require => Exec['node']
+}
 }
 
 class emacs {
