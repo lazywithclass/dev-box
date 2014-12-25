@@ -114,6 +114,7 @@ class nodejs {
   }
 }
 
+# deprecated, currently using spacemacs
 class emacs {
   exec { 'use-the-emacs-ppa':
     command => 'add-apt-repository ppa:ubuntu-elisp/ppa -y',
@@ -248,12 +249,26 @@ class java {
   }
 }
 
+class spacemacs {
+  exec { 'clone-spacemacs':
+    command => 'git clone git@github.com:syl20bnr/spacemacs.git /home/vagrant/workspace/spacemacs',
+    user => 'vagrant',
+    creates => '/home/vagrant/workspace/spacemacs'
+  }
+  file { '/home/vagrant/.emacs.d':
+    ensure => 'link',
+    force => 'true',
+    target => '/home/vagrant/workspace/spacemacs',
+    require => Package['emacs-snapshot']
+  }
+}
+
 include system
 include nodejs
-include emacs
 include workspace
 include chrome
 include skype
 include monaco
 include frida
 include java
+include spacemacs
