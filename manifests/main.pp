@@ -261,7 +261,16 @@ class spacemacs {
     target => '/home/vagrant/workspace/spacemacs',
     require => Package['emacs-snapshot']
   }
+  file { '/home/vagrant/.spacemacs':
+    ensure => 'link',
+    force => 'true',
+    target => '/home/vagrant/workspace/dotfiles/spacemacs',
+    require => Package['emacs-snapshot']
+  }
 }
+
+# TODO git pull origin master to all repos 
+# on a vagrant rebase
 
 include system
 include nodejs
