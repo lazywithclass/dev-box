@@ -267,6 +267,11 @@ class spacemacs {
     target => '/home/vagrant/workspace/dotfiles/spacemacs',
     require => Package['emacs-snapshot']
   }
+  exec { 'install-cask':
+    command => 'curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python',
+    creates => '/home/vagrant/.cask',
+    user => 'vagrant'
+  }
 }
 
 # TODO git pull origin master to all repos 
